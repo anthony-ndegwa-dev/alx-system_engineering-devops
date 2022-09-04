@@ -1,2 +1,2 @@
 #!/bin/bash
-sudo find d -exec chmod 711
+chmod 755 *
