@@ -1,2 +1,2 @@
 #!/bin/bash
-sudo find /root/alx-system_engineering-devops -type d -exec chmod 755 {} \
+sudo find d -exec chmod 755 {}
