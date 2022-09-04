@@ -1,2 +1,3 @@
 #!/bin/bash
 chmod 755 alx-system_engineering-devops
+sudo find /root/alx-system_engineering-devops -type d -exec chmod 755 {} \
