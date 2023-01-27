@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #Bash script that displays a message when it is terminated
-while :
+while true
 do
   echo "To infinity and beyond"
   sleep 2
