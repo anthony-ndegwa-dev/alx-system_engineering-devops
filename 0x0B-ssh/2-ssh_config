@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Configure SSH to your needs so that you can connect
+# to a server without typing a password
+SendEnv LANG LC_*
+    HashKnownHosts yes
+    GSSAPIAuthentication yes
+    GSSAPIDelegateCredentials no
+    IdentityFile ~/.ssh/school
+    PasswordAuthentication no
