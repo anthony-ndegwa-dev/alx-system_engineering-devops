@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Script to install Nginx web server
+#	Listens on port 80.
+#	Returns a page containing "Hello World!" when queried
+#	using a curl GET request.
+apt-get -y update
+apt-get -y install nginx
+echo "Hello World!" > /var/www/html/index.html
+service nginx start
