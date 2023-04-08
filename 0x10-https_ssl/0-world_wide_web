@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+# Function to display record information
+
+function display_record_info {
+    echo "The subdomain $1 is a $2 record and points to $3"
+}
+
+# Check A record for specified subdomain
+function check_subdomain {
+    record=$(dig +short A $2.$1)
+    if [ -z "$record" ]
+    then
+        echo "No A record found for subdomain $2"
+    else
+        display_record_info "$2" "A" "$record"
+    fi
+}
+
+# Check for specified subdomain and exit script if found
+if [ ! -z "$2" ]
+then
+    check_subdomain "$1" "$2"
+    exit 0
+fi
+
+# Check A record for subdomain www
+www_record=$(dig +short A www.ndegwa.tech)
+if [ -z "$www_record" ]
+then
+    echo "No A record found for subdomain www"
+else
+    display_record_info "www" "A" "$www_record"
+fi
+
+# Check A record for subdomain lb-01
+lb01_record=$(dig +short A lb-01.ndegwa.tech)
+if [ -z "$lb01_record" ]
+then
+    echo "No A record found for subdomain lb-01"
+else
+    display_record_info "lb-01" "A" "$lb01_record"
+fi
+
+# Check A record for subdomain web-01
+web01_record=$(dig +short A web-01.ndegwa.tech)
+if [ -z "$web01_record" ]
+then
+    echo "No A record found for subdomain web-01"
+else
+    display_record_info "web-01" "A" "$web01_record"
+fi
+
+# Check A record for subdomain web-02
+web02_record=$(dig +short A web-02.ndegwa.tech)
+if [ -z "$web02_record" ]
+then
+    echo "No A record found for subdomain web-02"
+else
+    display_record_info "web-02" "A" "$web02_record"
+fi
