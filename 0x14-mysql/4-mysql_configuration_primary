@@ -33,6 +33,9 @@ datadir         = /var/lib/mysql
 log-error       = /var/log/mysql/error.log
 validate_password = OFF
 server-id       = 1
+log_bin         = /var/log/mysql/mysql-bin.log
+binlog_do_db    = tyrell_corp
+
 # By default we only accept connections from localhost
 # bind-address  = 127.0.0.1
 # Disabling symbolic-links is recommended to prevent assorted security risks
