@@ -29,38 +29,68 @@ function! This /can/ be done with a loop but use a recursive function.
 """
 import re
 import requests
+import sys
 
-def count_words(subreddit, word_list, after=None, count_dict=None):
-    if count_dict is None:
-        count_dict = {}
 
-    if after is None:
-        url = f"https://www.reddit.com/r/{subreddit}/hot.json"
-    else:
-        url = f"https://www.reddit.com/r/{subreddit}/hot.json?after={after}"
-
-    headers = {'User-Agent': 'Mozilla/5.0'}
-    response = requests.get(url, headers=headers, allow_redirects=False)
-
-    if response.status_code != 200:
+def add_title(dictionary, hot_posts):
+    """ Adds item into a list """
+    if len(hot_posts) == 0:
         return
 
-    data = response.json()
-    posts = data['data']['children']
+    title = hot_posts[0]['data']['title'].split()
+    for word in title:
+        for key in dictionary.keys():
+            c = re.compile("^{}$".format(key), re.I)
+            if c.findall(word):
+                dictionary[key] += 1
+    hot_posts.pop(0)
+    add_title(dictionary, hot_posts)
 
-    for post in posts:
-        title = post['data']['title']
-        words = re.findall(r'\b\w+\b', title.lower())
 
-        for word in word_list:
-            if word.lower() in words:
-                count_dict[word.lower()] = count_dict.get(word.lower(), 0) + words.count(word.lower())
+def recurse(subreddit, dictionary, after=None):
+    """ Queries to Reddit API """
+    u_agent = 'Mozilla/5.0'
+    headers = {
+        'User-Agent': u_agent
+    }
 
-    after = data['data']['after']
-    if after is not None:
-        count_words(subreddit, word_list, after, count_dict)
+    params = {
+        'after': after
+    }
+
+    url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
+    res = requests.get(url,
+                       headers=headers,
+                       params=params,
+                       allow_redirects=False)
+
+    if res.status_code != 200:
+        return None
+
+    dic = res.json()
+    hot_posts = dic['data']['children']
+    add_title(dictionary, hot_posts)
+    after = dic['data']['after']
+    if not after:
+        return
+    recurse(subreddit, dictionary, after=after)
+
+
+def count_words(subreddit, word_list):
+    """ Init function """
+    dictionary = {}
+
+    for word in word_list:
+        dictionary[word] = 0
+
+    recurse(subreddit, dictionary)
+
+    n = sorted(dictionary.items(), key=lambda kv: kv[1])
+    n.reverse()
+
+    if len(n) != 0:
+        for item in n:
+            if item[1] != 0:
+                print("{}: {}".format(item[0], item[1]))
     else:
-        sorted_counts = sorted(count_dict.items(), key=lambda x: (-x[1], x[0]))
-
-        for word, count in sorted_counts:
-            print(f"{word}: {count}")
+        print("")
