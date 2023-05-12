@@ -1,4 +1,4 @@
-# Use strace to find & fix why Apache returns 500 error, then automate using Puppet
+# Fix why Apache returns 500 error, then automate using Puppet
 
 exec {'replace':
   provider => shell,
